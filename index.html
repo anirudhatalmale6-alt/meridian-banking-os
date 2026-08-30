@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MERIDIAN — Banking Operating System</title>
+<meta name="description" content="Interactive prototype of a unified banking operating system: core ledger, customer 360, accounts, payments with maker-checker, financial close and audit.">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-palette="#127A5B,#AD7A10,#2C6FB0">
+
+<!-- ============================ SIGN IN ============================ -->
+<div id="auth" class="auth">
+  <div class="auth__brand">
+    <svg class="guilloche" viewBox="0 0 600 800" aria-hidden="true" preserveAspectRatio="xMidYMid slice"></svg>
+    <div class="auth__brandInner">
+      <div class="mark">
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="1" y="1" width="38" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9 29V11l11 13 11-13v18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        </svg>
+        <span>MERIDIAN</span>
+      </div>
+      <h1 class="auth__headline">One platform for the<br><em>whole bank.</em></h1>
+      <p class="auth__sub">Customers, accounts, ledger, payments, treasury, compliance, finance and analytics — on a single immutable core. No jumping between disconnected systems.</p>
+      <ul class="auth__facts">
+        <li><span>Ledger</span> Immutable, hash-chained double entry</li>
+        <li><span>Access</span> Password + TOTP, device binding, 4-eyes</li>
+        <li><span>Standards</span> ISO 20022 · SOC 2 controls · PCI DSS scope isolation</li>
+      </ul>
+      <p class="auth__foot">Interactive prototype — no real customer data.</p>
+    </div>
+  </div>
+
+  <div class="auth__panel">
+    <div class="auth__card">
+      <!-- step 1 -->
+      <section class="step" data-step="1">
+        <p class="eyebrow">Secure sign-in</p>
+        <h2>Operations console</h2>
+        <p class="lede">Authenticate to the production business date <strong>30-Aug-2026</strong>.</p>
+        <label class="field">
+          <span>Operator ID</span>
+          <input id="f-user" type="text" value="OPS.RMENON" autocomplete="username" spellcheck="false">
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="f-pass" type="password" value="demo-password" autocomplete="current-password">
+        </label>
+        <div class="field-row">
+          <label class="check"><input type="checkbox" id="f-trust"><span>Trust this device for 30 days</span></label>
+          <a class="link" href="#" onclick="return false">Forgot password</a>
+        </div>
+        <button class="btn btn--primary btn--block" id="go-mfa">Continue</button>
+        <p class="hint">Demo credentials are pre-filled. Any password is accepted.</p>
+      </section>
+
+      <!-- step 2 -->
+      <section class="step" data-step="2" hidden>
+        <p class="eyebrow">Second factor</p>
+        <h2>Authenticator code</h2>
+        <p class="lede">Enter the 6-digit code from the authenticator app bound to <strong>OPS.RMENON</strong>.</p>
+        <div class="otp" id="otp">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 1">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 2">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 3">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 4">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 5">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 6">
+        </div>
+        <p class="otp__err" id="otp-err" hidden>That code was not accepted. Try <strong>123456</strong>.</p>
+        <div class="otp__meta">
+          <span class="dot dot--pine"></span> Time-based (TOTP, RFC 6238) · rotates in <span id="otp-count" class="mono">24</span>s
+        </div>
+        <button class="btn btn--primary btn--block" id="go-app">Verify and sign in</button>
+        <button class="btn btn--ghost btn--block" id="back-1">Back</button>
+        <p class="hint">Demo code: <strong class="mono">123456</strong></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ APP SHELL ============================ -->
+<div id="app" class="app" hidden>
+  <aside class="rail">
+    <div class="rail__mark">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M9 29V11l11 13 11-13v18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
+      </svg>
+      <span>MERIDIAN</span>
+    </div>
+    <nav class="rail__nav" id="nav"></nav>
+    <div class="rail__foot">
+      <div class="who">
+        <div class="who__av">RM</div>
+        <div>
+          <strong>R. Menon</strong>
+          <span>Operations Manager</span>
+        </div>
+      </div>
+      <button class="rail__out" id="signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar__search">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="search" placeholder="Search customers, accounts, journals, payments…" aria-label="Global search">
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="topbar__meta">
+        <div class="bizdate">
+          <span class="bizdate__k">Business date</span>
+          <span class="bizdate__v mono">30-Aug-2026</span>
+        </div>
+        <div class="pill pill--open"><span class="dot dot--pine"></span> Day open</div>
+        <div class="pill">Base <strong class="mono">INR</strong></div>
+      </div>
+    </header>
+    <main id="view" class="view" tabindex="-1"></main>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
